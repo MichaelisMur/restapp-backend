@@ -1,6 +1,7 @@
 const express     = require('express'),
     bcrypt      = require('bcrypt'),
     bodyParser  = require('body-parser'),
+    cors        = require("cors"),
     jwt         = require("jsonwebtoken");
 
 
@@ -13,11 +14,18 @@ let app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+}
+app.use(cors(corsOptions));
+
 const connectionString = "postgres://hgkgovsi:GyQFV6bo2hGNcADpA5DAX5SrffiPrkpu@hattie.db.elephantsql.com/hgkgovsi" || process.env.db || 'postgresql://ROOT:PASSWORD@localhost:5500/RESTAPP'
 const Pool = require('pg').Pool
 const pool = new Pool({
   connectionString
 })
+
 
 const User = '"User"'
 const Employee = '"Employee"'
