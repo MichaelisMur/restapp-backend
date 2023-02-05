@@ -210,7 +210,7 @@ app.post('/remove_employee', auth, admin, (req, res) => {
 })
 
 app.post('/restaurant', (req, res) => {
-  pool.query(`SELECT "name", "address", "description" FROM ${Restaurant} WHERE id = $1`,
+  pool.query(`SELECT "name", "address", "description", "working_hours", "contacts" FROM ${Restaurant} WHERE id = $1`,
   [req.body.restaurant_id], (error, results) => {
     if (error) {
       throw error
