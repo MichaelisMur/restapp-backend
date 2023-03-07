@@ -30,6 +30,9 @@ const pool = new Pool({
 const User = '"User"'
 const Employee = '"Employee"'
 const Restaurant = '"Restaurant"'
+const RestaurantScreens = '"Restaurant_Screens"'
+const RestaurantMenu = '"Restaurant_Menu"'
+const ScreensImages = '"Screens_Images"'
 
 app.post('/register', (req, res) => {
   if (!req.body.email || !req.body.password || req.body.email.length < 4 ||
@@ -217,18 +220,62 @@ app.post('/remove_employee', auth, admin, (req, res) => {
   })
 })
 
-app.post('/restaurant', (req, res) => {
-  pool.query(`SELECT "name", "address", "description", "working_hours", "contacts" FROM ${Restaurant} WHERE id = $1`,
-  [req.body.restaurant_id], (error, results) => {
+app.post('/restaurants', (req, res) => {
+  pool.query(`SELECT "name", "address", "description", "working_hours", "contacts", "id" FROM ${Restaurant}`,
+  [], (error, results) => {
     if (error) {
       throw error
     }
     res.status(200).json({
-      restaurant: results.rows[0],
+      restaurant: results.rows,
       user: req.user
     })
   })
 })
+
+app.post('/restaurant', (req, res) => {
+  pool.query(`SELECT "name", "address", "description", "working_hours", "contacts" FROM ${Restaurant} WHERE id = $1`,
+    [req.body.restaurant_id])
+  .then((resultRestaurant) => {
+    
+    pool.query(`SELECT "restaurant_id", "screen_number", "page_number", "page_title", "page_text", "screen_type" FROM ${RestaurantScreens} WHERE restaurant_id = $1`,
+      [req.body.restaurant_id])
+    .then((resultScreens) => {
+
+      pool.query(`SELECT "restaurant_id", "screen_number", "page_number", "img_link" FROM ${ScreensImages} WHERE restaurant_id = $1`,
+          [req.body.restaurant_id])
+      .then((resultImages) => {
+
+        let arrayToWorkWith = [{info: []}, {info: []}, {info: []}, {info: []}, {info: []}, {info: []}, {info: []}]
+        resultScreens.rows.forEach(screen => {
+
+          arrayToWorkWith[screen.screen_number - 1].info[screen.page_number - 1] = {
+            title: screen.page_title,
+            text: screen.page_text,
+            images: resultImages.rows.filter(image => (
+              image.screen_number == screen.screen_number && image.page_number == screen.page_number
+            )).map(img => img.img_link)
+          }
+          arrayToWorkWith[screen.screen_number - 1].type = screen.screen_type
+
+        })
+
+        arrayToWorkWith = arrayToWorkWith.filter(e => e.info.length != 0);
+
+        res.status(200).json({
+          ...resultRestaurant.rows[0],
+          screens: arrayToWorkWith,
+          user: req.user
+        })
+
+      })
+    })
+    .catch((err) => console.error('Error executing query', err.stack))
+  })
+  .catch((err) => console.error('Error executing query', err.stack))
+})
+
+
 
 app.post('/news', auth, (req, res) => {
   res.status(200).json({
