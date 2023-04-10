@@ -10,6 +10,7 @@ const verifyToken = (req, res, next) => {
   
     try {
       const accessDecoded = jwt.verify(access_token, "process.env.TOKEN_KEY");
+      console.log(accessDecoded)
       req.user = {access_token, refresh_token, id: accessDecoded.id,
         role: accessDecoded.role, email: accessDecoded.email,
         restaurant_id: accessDecoded.restaurant_id};

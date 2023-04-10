@@ -125,15 +125,15 @@ app.post('/employee_login', (req, res) => {
     })
   }
 
-  pool.query(`SELECT * FROM ${Employee} WHERE restaurant_id = $1 AND email = $2`,
-  [req.body.restaurant_id, req.body.email], (error, results) => {
+  pool.query(`SELECT * FROM ${Employee} WHERE email = $1`,
+  [req.body.email], (error, results) => {
     if (error) {
       throw error
     }
 
     if (results.rows.length == 0) {
       return res.status(401).json({
-        message: "admin with this email is not registered in this restaurant"
+        message: "employee with this email is not registered"
       })
     }
 
@@ -262,6 +262,7 @@ app.post('/restaurant', (req, res) => {
 
         arrayToWorkWith = arrayToWorkWith.filter(e => e.info.length != 0);
 
+        console.log(arrayToWorkWith)
         res.status(200).json({
           ...resultRestaurant.rows[0],
           screens: arrayToWorkWith,
@@ -275,7 +276,75 @@ app.post('/restaurant', (req, res) => {
   .catch((err) => console.error('Error executing query', err.stack))
 })
 
-
+app.post('/restaurant_edit', auth, (req, res) => {
+  switch (req.body.action) {
+    case("name"):
+      pool.query(`UPDATE ${Restaurant} SET name = $1 WHERE id = $2`,
+      [req.body.value, req.body.restaurant_id])
+        .then((resultRestaurant) => {
+          res.status(200).json({
+            result: resultRestaurant,
+            user: req.user
+          })
+        })
+      break
+      
+    case("address"):
+      pool.query(`UPDATE ${Restaurant} SET address = $1 WHERE id = $2`,
+      [req.body.value, req.body.restaurant_id])
+        .then((resultRestaurant) => {
+          res.status(200).json({
+            result: resultRestaurant,
+            user: req.user
+          })
+        })
+      break
+    
+    case("description"):
+      pool.query(`UPDATE ${Restaurant} SET description = $1 WHERE id = $2`,
+      [req.body.value, req.body.restaurant_id])
+        .then((resultRestaurant) => {
+          res.status(200).json({
+            result: resultRestaurant,
+            user: req.user
+          })
+        })
+      break
+      
+    case("working_hours"):
+      pool.query(`UPDATE ${Restaurant} SET working_hours = $1 WHERE id = $2`,
+      [req.body.value, req.body.restaurant_id])
+        .then((resultRestaurant) => {
+          res.status(200).json({
+            result: resultRestaurant,
+            user: req.user
+          })
+        })
+      break
+      
+      case("contacts"):
+        pool.query(`UPDATE ${Restaurant} SET contacts = $1 WHERE id = $2`,
+        [req.body.value, req.body.restaurant_id])
+          .then((resultRestaurant) => {
+            res.status(200).json({
+              result: resultRestaurant,
+              user: req.user
+            })
+          })
+        break
+      
+      case("screens"):
+        // pool.query(`UPDATE ${Restaurant} SET screens = $1 WHERE id = $2`,
+        // [req.body.value, req.body.restaurant_id])
+        //   .then((resultRestaurant) => {
+        //     res.status(200).json({
+        //       result: resultRestaurant,
+        //       user: req.user
+        //     })
+        //   })
+        break
+  }
+})
 
 app.post('/news', auth, (req, res) => {
   res.status(200).json({
