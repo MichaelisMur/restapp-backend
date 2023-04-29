@@ -3,6 +3,7 @@ const express     = require('express'),
     bodyParser  = require('body-parser'),
     cors        = require("cors"),
     jwt         = require("jsonwebtoken");
+    logger      = require('pino')()
 
 
 const auth = require("./middleware/auth");
@@ -35,6 +36,9 @@ const RestaurantMenu = '"Restaurant_Menu"'
 const ScreensImages = '"Screens_Images"'
 
 app.post('/register', (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/register')
+
   if (!req.body.email || !req.body.password || req.body.email.length < 4 ||
     req.body.email.length > 20 || req.body.password.length < 4 || req.body.password.length > 30) {
     return res.status(401).json({
@@ -76,6 +80,9 @@ app.post('/register', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/login')
+
   if (!req.body.email || !req.body.password || req.body.email.length < 4 ||
     req.body.email.length > 20 || req.body.password.length < 4 || req.body.password.length > 30) {
     return res.status(401).json({
@@ -118,6 +125,9 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/employee_login', (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/employee_login')
+  
   if (!req.body.email || !req.body.password || req.body.email.length < 4 ||
     req.body.email.length > 20 || req.body.password.length < 4 || req.body.password.length > 30) {
     return res.status(401).json({
@@ -163,6 +173,9 @@ app.post('/employee_login', (req, res) => {
 })
 
 app.post('/show_employees', auth, admin, (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/show_employees')
+  
   pool.query(`SELECT "name", "role", "email" FROM ${Employee} WHERE restaurant_id = $1 AND removed = FALSE`,
   [req.user.restaurant_id], (error, results) => {
     if (error) {
@@ -177,6 +190,9 @@ app.post('/show_employees', auth, admin, (req, res) => {
 })
 
 app.post('/add_employee', auth, admin, (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/add_employee')
+  
   if (!req.body.email || !req.body.password || !req.body.name || req.body.email.length < 4 ||
     req.body.email.length > 20 || req.body.password.length < 4 || req.body.password.length > 30 ||
     req.body.name.length > 30 || req.body.name.length < 4) {
@@ -206,7 +222,9 @@ app.post('/add_employee', auth, admin, (req, res) => {
 })
 
 app.post('/remove_employee', auth, admin, (req, res) => {
-
+  const log = logger.child({ body: req.body })
+  log.info('/remove_employee')
+  
   pool.query(`UPDATE ${Employee} SET removed = TRUE WHERE id = $1`, [req.body.id],
   (error, results) => {
     if (error) {
@@ -221,6 +239,9 @@ app.post('/remove_employee', auth, admin, (req, res) => {
 })
 
 app.post('/restaurants', (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/restaurants')
+  
   pool.query(`SELECT "name", "address", "description", "working_hours", "contacts", "id" FROM ${Restaurant}`,
   [], (error, results) => {
     if (error) {
@@ -234,6 +255,9 @@ app.post('/restaurants', (req, res) => {
 })
 
 app.post('/restaurant', (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/restaurant')
+  
   pool.query(`SELECT "name", "address", "description", "working_hours", "contacts" FROM ${Restaurant} WHERE id = $1`,
     [req.body.restaurant_id])
   .then((resultRestaurant) => {
@@ -277,6 +301,9 @@ app.post('/restaurant', (req, res) => {
 })
 
 app.post('/restaurant_edit', auth, (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/restaurant_edit')
+  
   switch (req.body.action) {
     case("name"):
       pool.query(`UPDATE ${Restaurant} SET name = $1 WHERE id = $2`,
@@ -347,6 +374,9 @@ app.post('/restaurant_edit', auth, (req, res) => {
 })
 
 app.post('/news', auth, (req, res) => {
+  const log = logger.child({ body: req.body })
+  log.info('/news')
+  
   res.status(200).json({
     message: "hello, world!!!",
     user: req.user
