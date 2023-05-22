@@ -36,6 +36,7 @@ const RestaurantMenu = '"Restaurant_Menu"'
 const ScreensImages = '"Screens_Images"'
 
 app.post('/register', (req, res) => {
+  // логирование запроса на регистрацию клиента
   const log = logger.child({ body: req.body })
   log.info('/register')
 
@@ -80,6 +81,7 @@ app.post('/register', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+  // логирование запроса на логин клиента
   const log = logger.child({ body: req.body })
   log.info('/login')
 
@@ -125,6 +127,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/employee_login', (req, res) => {
+  // логирование запроса на логин сотрудника
   const log = logger.child({ body: req.body })
   log.info('/employee_login')
   
@@ -173,6 +176,7 @@ app.post('/employee_login', (req, res) => {
 })
 
 app.post('/show_employees', auth, admin, (req, res) => {
+  // логирование запроса на отображения информации о сотрудниках
   const log = logger.child({ body: req.body })
   log.info('/show_employees')
   
@@ -190,6 +194,7 @@ app.post('/show_employees', auth, admin, (req, res) => {
 })
 
 app.post('/add_employee', auth, admin, (req, res) => {
+  // логирование запроса на добавление сотрудника
   const log = logger.child({ body: req.body })
   log.info('/add_employee')
   
@@ -222,6 +227,7 @@ app.post('/add_employee', auth, admin, (req, res) => {
 })
 
 app.post('/remove_employee', auth, admin, (req, res) => {
+  // логирование запроса на удаление сотрудника
   const log = logger.child({ body: req.body })
   log.info('/remove_employee')
   
@@ -239,6 +245,7 @@ app.post('/remove_employee', auth, admin, (req, res) => {
 })
 
 app.post('/restaurants', (req, res) => {
+  // логирование запроса на отображение ресторанов
   const log = logger.child({ body: req.body })
   log.info('/restaurants')
   
@@ -255,6 +262,7 @@ app.post('/restaurants', (req, res) => {
 })
 
 app.post('/restaurant', (req, res) => {
+  // логирование запроса на отображение информации о ресторане
   const log = logger.child({ body: req.body })
   log.info('/restaurant')
   
@@ -301,6 +309,7 @@ app.post('/restaurant', (req, res) => {
 })
 
 app.post('/restaurant_edit', auth, (req, res) => {
+  // логирование запроса на редактирование информации о ресторане
   const log = logger.child({ body: req.body })
   log.info('/restaurant_edit')
   
