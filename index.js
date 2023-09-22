@@ -21,7 +21,7 @@ var corsOptions = {
 }
 app.use(cors(corsOptions));
 
-const connectionString = "postgres://hgkgovsi:GyQFV6bo2hGNcADpA5DAX5SrffiPrkpu@hattie.db.elephantsql.com/hgkgovsi" || process.env.db || 'postgresql://ROOT:PASSWORD@localhost:5500/RESTAPP'
+const connectionString = "postgres://MichaelisMur:la1oIMxFt4NZ@ep-wispy-voice-05259317.eu-central-1.aws.neon.tech/neondb" || process.env.db || 'postgresql://ROOT:PASSWORD@localhost:5500/RESTAPP'
 const Pool = require('pg').Pool
 const pool = new Pool({
   connectionString
