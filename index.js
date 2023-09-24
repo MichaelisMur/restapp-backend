@@ -60,7 +60,7 @@ app.post('/register', (req, res) => {
 
     let newId = Math.floor(Math.random() * 9000000) + 1000000
 
-    const accessToken = jwt.sign({ id: newId, email: req.body.email, role: "" },
+    const accessToken = jwt.sign({ id: newId, email: req.body.email, role: "", bonuses: "0" },
       "process.env.TOKEN_KEY", {expiresIn: "2h"}
     );
 
@@ -110,12 +110,12 @@ app.post('/login', (req, res) => {
     }
 
     const accessToken = jwt.sign(
-      { id: results.rows[0].id, email: results.rows[0].email, role: "" },
+      { id: results.rows[0].id, email: results.rows[0].email, role: "", bonuses: results.rows[0].bonuses },
       "process.env.TOKEN_KEY", {expiresIn: "2h"}
     );
 
     const refreshToken = jwt.sign(
-      { id: results.rows[0].id, email: results.rows[0].email, role: "" }, 
+      { id: results.rows[0].id, email: results.rows[0].email, role: "", bonuses: results.rows[0].bonuses }, 
       "process.env.TOKEN_KEY", { expiresIn: '100d' }
     );
 
