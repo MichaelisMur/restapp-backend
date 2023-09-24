@@ -110,12 +110,12 @@ app.post('/login', (req, res) => {
     }
 
     const accessToken = jwt.sign(
-      { id: results.rows[0].id, email: results.rows[0].email, role: "client" },
+      { id: results.rows[0].id, email: results.rows[0].email, role: "" },
       "process.env.TOKEN_KEY", {expiresIn: "2h"}
     );
 
     const refreshToken = jwt.sign(
-      { id: results.rows[0].id, email: results.rows[0].email, role: "client" }, 
+      { id: results.rows[0].id, email: results.rows[0].email, role: "" }, 
       "process.env.TOKEN_KEY", { expiresIn: '100d' }
     );
 
